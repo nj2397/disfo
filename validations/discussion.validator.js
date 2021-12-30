@@ -1,7 +1,7 @@
 const Joi = require("joi");
 
 const discussionValidationSchema = Joi.object().keys({
-  title: Joi.string().required().max(100),
+  title: Joi.string().required().max(150),
   author: Joi.string().required(),
   content: Joi.string().default(""),
 });

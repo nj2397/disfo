@@ -10,7 +10,7 @@ const commentSchema = new mongoose.Schema(
 
 const discussionSchema = new mongoose.Schema(
   {
-    title: { type: String, maxlength: 100, required: true },
+    title: { type: String, maxlength: 150, required: true },
     author: { type: String, required: true, immutable: true },
     content: { type: String, default: ""},
     comments: { type: [commentSchema], default: [] },
