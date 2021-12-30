@@ -47,8 +47,8 @@ const getAllDiscussions = async (req, res) => {
 
 const createNewDiscussion = async (req, res) => {
   try {
-    const { author, title, content } = req.body;
-    const newDiscussion = new Discussion({ author, title, content });
+    const { author, title, content, comments } = req.body;
+    const newDiscussion = new Discussion({ author, title, content, comments });
     const result = await newDiscussion.save();
     res.json(result);
   } catch (error) {

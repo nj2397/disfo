@@ -6,7 +6,7 @@ const {
   getAllDiscussions,
   addNewComment,
   deleteDiscussion,
-  updateDiscussion
+  updateDiscussion,
 } = require("../controllers/discussion.controller");
 const {
   discussionValidationSchema,
@@ -32,7 +32,7 @@ router.post(
 router.get("/user/:username", findDiscussionsByUser);
 router.get("/id/:id", findDiscussionById);
 router.get("/all", checkAdminKey, getAllDiscussions);
-router.patch("/id/:id", verifyAuthor, updateDiscussion)
+router.patch("/id/:id", verifyAuthor, updateDiscussion);
 router.put(
   "/:id/comment",
   fetchUserInCollection,
