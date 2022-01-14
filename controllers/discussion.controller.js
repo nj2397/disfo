@@ -52,19 +52,11 @@ const createNewDiscussion = async (req, res) => {
     const result = await newDiscussion.save();
     res.json(result);
   } catch (error) {
-    if (error.code === 11000) {
-      res.status(409).json({
-        message: "Could not create new discussion",
-        title: req.body.title,
-        reason: "Already Exists in DB",
-      });
-    } else {
-      res.status(500).json({
-        message: "Failed to create new user",
-        title: req.body.title,
-        error,
-      });
-    }
+    res.status(500).json({
+      message: "Failed to create new discussion",
+      title: req.body.title,
+      error,
+    });
   }
 };
 

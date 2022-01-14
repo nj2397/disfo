@@ -29,10 +29,13 @@ router.post(
   validateDiscussion,
   createNewDiscussion
 );
+router.get("/all", checkAdminKey, getAllDiscussions);
 router.get("/user/:username", findDiscussionsByUser);
 router.get("/id/:id", findDiscussionById);
-router.get("/all", checkAdminKey, getAllDiscussions);
+
 router.patch("/id/:id", verifyAuthor, updateDiscussion);
+router.delete("/id/:id", verifyAuthor, deleteDiscussion);
+
 router.put(
   "/:id/comment",
   fetchUserInCollection,
@@ -40,6 +43,5 @@ router.put(
   validateComment,
   addNewComment
 );
-router.delete("/id/:id", verifyAuthor, deleteDiscussion);
 
 module.exports = router;
