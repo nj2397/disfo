@@ -1,9 +1,10 @@
-const Discussion = require("../models/discussion.model");
+const DiscussionService = require("../services/discussion.service");
+const DiscussionServiceInstance = new DiscussionService();
 
 const findDiscussionById = async (req, res) => {
   try {
     const { id } = req.params;
-    const result = await Discussion.findById(id);
+    const result = await DiscussionServiceInstance.findWithId(id);
     if (result) {
       res.json(result);
     } else {
@@ -17,7 +18,7 @@ const findDiscussionById = async (req, res) => {
 const findDiscussionsByUser = async (req, res) => {
   try {
     const { username } = req.params;
-    const result = await Discussion.find({ author: username });
+    const result = await DiscussionServiceInstance.findForUsername(username);
     if (result.length) {
       res.json(result);
     } else {
@@ -34,7 +35,7 @@ const findDiscussionsByUser = async (req, res) => {
 
 const getAllDiscussions = async (req, res) => {
   try {
-    const discussionRes = await Discussion.find({});
+    const discussionRes = await DiscussionServiceInstance.findAll();
     if (discussionRes.length) {
       res.json(discussionRes);
     } else {
@@ -47,9 +48,7 @@ const getAllDiscussions = async (req, res) => {
 
 const createNewDiscussion = async (req, res) => {
   try {
-    const { author, title, content, comments } = req.body;
-    const newDiscussion = new Discussion({ author, title, content, comments });
-    const result = await newDiscussion.save();
+    const result = await DiscussionServiceInstance.create(req.body);
     res.json(result);
   } catch (error) {
     res.status(500).json({
@@ -63,13 +62,7 @@ const createNewDiscussion = async (req, res) => {
 const addNewComment = async (req, res) => {
   try {
     const { id } = req.params;
-    const { author, content } = req.body;
-    const newComment = { author, content };
-    const result = await Discussion.findOneAndUpdate(
-      { _id: id },
-      { $push: { comments: newComment } },
-      { new: true }
-    );
+    const result = await DiscussionServiceInstance.addComment(req.body, id);
     res.json(result);
   } catch (error) {
     res.status(500).json({
@@ -83,8 +76,7 @@ const addNewComment = async (req, res) => {
 const deleteDiscussion = async (req, res) => {
   try {
     const { id } = req.params;
-    const { author } = req.body;
-    const result = await Discussion.findOneAndDelete({ _id: id, author });
+    const result = await DiscussionServiceInstance.delete(id);
     res.json(result);
   } catch (error) {
     res.status(500).json({
@@ -98,16 +90,11 @@ const deleteDiscussion = async (req, res) => {
 const updateDiscussion = async (req, res) => {
   try {
     const { id } = req.params;
-    const { author } = req.body;
-    const result = await Discussion.findOneAndUpdate(
-      { _id: id, author },
-      req.body,
-      { new: true }
-    );
+    const result = await DiscussionServiceInstance.update(id, req.body);
     res.json(result);
   } catch (error) {
     res.status(500).json({
-      message: "Failed to delete this discussion",
+      message: "Failed to update this discussion",
       discussion_id: id,
       error,
     });

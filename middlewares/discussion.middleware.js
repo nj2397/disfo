@@ -1,9 +1,10 @@
-const Discussion = require("../models/discussion.model");
+const DiscussionService = require("../services/discussion.service");
+const DiscussionServiceInstance = new DiscussionService();
 
 const fetchDiscussion = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const discussionToUpdate = await Discussion.findById(id);
+    const discussionToUpdate = await DiscussionServiceInstance.findWithId(id);
     if (discussionToUpdate) {
       next();
     } else {
@@ -24,7 +25,7 @@ const verifyAuthor = async (req, res, next) => {
   try {
     const { id } = req.params;
     const { author } = req.body;
-    const resourceToDelete = await Discussion.findById(id);
+    const resourceToDelete = await DiscussionServiceInstance.findWithId(id);
     if (resourceToDelete) {
       if (resourceToDelete.author === author) {
         next();
