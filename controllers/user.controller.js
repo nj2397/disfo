@@ -1,19 +1,16 @@
-const Users = require("../models/user.model");
+const UserService = require("../services/user.service");
+const UserServiceInstance = new UserService();
 
-const registerNewUser = async (req, res) => {
+const postRegister = async (req, res) => {
   try {
-    const { fullName, email, username } = req.body;
-    const newUser = new Users({ email, username, fullName });
-    const result = await newUser.save();
+    const result = await UserServiceInstance.register(req.body);
     res.json(result);
   } catch (error) {
     if (error.code === 11000) {
-      res
-        .status(409)
-        .json({
-          message: "Failed to create new user",
-          reason: "Already Exists in DB",
-        });
+      res.status(409).json({
+        message: "Failed to create new user",
+        reason: "Already Exists in DB",
+      });
     } else {
       res.status(500).json({ message: "Failed to create new user", error });
     }
@@ -23,7 +20,7 @@ const registerNewUser = async (req, res) => {
 const getUserByUsername = async (req, res) => {
   try {
     const { username } = req.params;
-    const userResult = await Users.findOne({ username });
+    const userResult = await UserServiceInstance.findByUsername(username);
     if (userResult) {
       res.json(userResult);
     } else {
@@ -36,7 +33,7 @@ const getUserByUsername = async (req, res) => {
 
 const getAllUsers = async (req, res) => {
   try {
-    const userResult = await Users.find({});
+    const userResult = await UserServiceInstance.findAll();
     if (userResult) {
       res.json(userResult);
     } else {
@@ -47,4 +44,4 @@ const getAllUsers = async (req, res) => {
   }
 };
 
-module.exports = { registerNewUser, getUserByUsername, getAllUsers };
+module.exports = { postRegister, getUserByUsername, getAllUsers };
