@@ -1,9 +1,10 @@
-const User = require("../models/user.model");
+const UserService = require("../services/user.service");
+const UserServiceInstance = new UserService();
 
 const fetchUserInCollection = async (req, res, next) => {
   try {
     const { author } = req.body;
-    const user = await User.findOne({ username: author });
+    const user = await UserServiceInstance.findByUsername(author);
     if (!user)
       return res
         .status(404)
